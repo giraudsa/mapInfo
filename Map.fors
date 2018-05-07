@@ -4,23 +4,6 @@ $GEN_JavaGenerator : HttpObjectExchanger-rwc,PersistenceManager-rw,StaticDataExc
 
 Application
 
-Attribut : Caracteristique
-	type : !enum,int, bool, date, float, string
-
-AutreStructure : Structure
-	nom : !string
-AutreStructure.modele --> Modele
-
-CSV : Structure
-CSV.files -->> File
-
-Caracteristique
-	isCollection : !string
-	nom : !string
-
-Colonne
-	nom : !string
-
 Communication
 //[en ms] estimation du délais entre deux communications (inverse de la fréquence de communication)
 	delais : int
@@ -29,34 +12,20 @@ Communication
 //méthode de communication
 Communication.protocole --> Protocol
 
-Entite : Organisation
+Division : Organisation
+	responsable : string
 
 Entreprise : Organisation
 	ville : string
-Entreprise.entites -->> Entite
+Entreprise.entites -->> Division
 Entreprise.maisonMere <<-->> Entreprise.filiale
 
-File
-File.colonnes -->> Colonne
-
 Information
+	categories : *enum,donneesPersonnelles,donneesClients,ERP,productions,reporting, financier
 	description : !string
 	exemple : blob
 	volumetrie : string
 Information.communications <!-->> Communication.donnees
-Information.metadonnees --@>> MetaDonnees
-Information.structure --!> Structure
-
-Json : Structure
-	shema : string
-Json.modele --> Modele
-
-MetaDonnees
-	clef : !string
-	description : !string
-
-Modele
-Modele.types -->> Type
 
 Organisation^
 	nom : !string
@@ -69,122 +38,52 @@ Protocol
 //exemple : FTP, HTTP, Téléphone
 	nom : !string
 
-Relation : Caracteristique
-Relation.type --!> Type
-
-Structure
-
-Type
-Type.caracteristiques --> Caracteristique
-
-Unstructured : Structure
-
 User
 	login : !string
 	password : !string
 	role : !enum,editor,viewer
-
-Xml : Structure
-	shema : string
-Xml.modele --> Modele
 
 //This module must be used to place elements that are not shared with other processus
 $MOD,clientLocal : ,PureJSGenerator,,,,,rw,0
 $CLMOD,clientLocal,Application,rw:
 $CLMOD,clientLocal,Entreprise,rw:ville-rw,entites-rw,filiale-rw,maisonMere-rw
 $CLMOD,clientLocal,Communication,rw:delais-rw,description-rw,destination-rw,donnees-rw,protocole-rw,source-rw
-$CLMOD,clientLocal,Entite,rw:
+$CLMOD,clientLocal,Division,rw:responsable-rw
 $CLMOD,clientLocal,Organisation,rw:nom-rw,communicationsEntrante-rw,communicationsSortantes-rw
-$CLMOD,clientLocal,Information,rw:description-rw,exemple-rw,volumetrie-rw,communications-rw,metadonnees-rw,structure-rw
+$CLMOD,clientLocal,Information,rw:description-rw,exemple-rw,categories-rw,volumetrie-rw,communications-rw
 $CLMOD,clientLocal,Protocol,rw:details-rw,nom-rw
 $CLMOD,clientLocal,User,rw:login-rw,password-rw,role-rw
-$CLMOD,clientLocal,Structure,rw:
-$CLMOD,clientLocal,CSV,rw:files-rw
-$CLMOD,clientLocal,MetaDonnees,rw:clef-rw,description-rw
-$CLMOD,clientLocal,File,rw:colonnes-rw
-$CLMOD,clientLocal,Colonne,rw:nom-rw
-$CLMOD,clientLocal,Json,rw:shema-rw,modele-rw
-$CLMOD,clientLocal,Unstructured,rw:
-$CLMOD,clientLocal,Xml,rw:shema-rw,modele-rw
-$CLMOD,clientLocal,Modele,rw:types-rw
-$CLMOD,clientLocal,Type,rw:caracteristiques-rw
-$CLMOD,clientLocal,Attribut,rw:type-rw
-$CLMOD,clientLocal,Caracteristique,rw:isCollection-rw,nom-rw
-$CLMOD,clientLocal,Relation,rw:type-rw
-$CLMOD,clientLocal,AutreStructure,rw:nom-rw,modele-rw
 //This module must be used to place elements that are not shared with other processus
 $MOD,serverLocal : ,JavaGenerator,,,,,rw,0
 $CLMOD,serverLocal,Application,rw:
 $CLMOD,serverLocal,Entreprise,rw:ville-rw,entites-rw,filiale-rw,maisonMere-rw
 $CLMOD,serverLocal,Communication,rw:delais-rw,description-rw,destination-rw,donnees-rw,protocole-rw,source-rw
-$CLMOD,serverLocal,Entite,rw:
+$CLMOD,serverLocal,Division,rw:responsable-rw
 $CLMOD,serverLocal,Organisation,rw:nom-rw,communicationsEntrante-rw,communicationsSortantes-rw
-$CLMOD,serverLocal,Information,rw:description-rw,exemple-rw,volumetrie-rw,communications-rw,metadonnees-rw,structure-rw
+$CLMOD,serverLocal,Information,rw:description-rw,exemple-rw,categories-rw,volumetrie-rw,communications-rw
 $CLMOD,serverLocal,Protocol,rw:details-rw,nom-rw
 $CLMOD,serverLocal,User,rw:login-rw,password-rw,role-rw
-$CLMOD,serverLocal,Structure,rw:
-$CLMOD,serverLocal,CSV,rw:files-rw
-$CLMOD,serverLocal,MetaDonnees,rw:clef-rw,description-rw
-$CLMOD,serverLocal,File,rw:colonnes-rw
-$CLMOD,serverLocal,Colonne,rw:nom-rw
-$CLMOD,serverLocal,Json,rw:shema-rw,modele-rw
-$CLMOD,serverLocal,Unstructured,rw:
-$CLMOD,serverLocal,Xml,rw:shema-rw,modele-rw
-$CLMOD,serverLocal,Modele,rw:types-rw
-$CLMOD,serverLocal,Type,rw:caracteristiques-rw
-$CLMOD,serverLocal,Attribut,rw:type-rw
-$CLMOD,serverLocal,Caracteristique,rw:isCollection-rw,nom-rw
-$CLMOD,serverLocal,Relation,rw:type-rw
-$CLMOD,serverLocal,AutreStructure,rw:nom-rw,modele-rw
 $MOD,httpToJavaServer : HttpObjectExchanger,PureJSGenerator,JavaServer,,,,rwc,0
 $CLMOD,httpToJavaServer,Application,rw:
 $CLMOD,httpToJavaServer,Entreprise,rw:ville-rw,entites-rw,filiale-rw,maisonMere-rw
 $CLMOD,httpToJavaServer,Communication,rw:delais-rw,description-rw,destination-rw,donnees-rw,protocole-rw,source-rw
-$CLMOD,httpToJavaServer,Entite,rw:
+$CLMOD,httpToJavaServer,Division,rw:responsable-rw
 $CLMOD,httpToJavaServer,Organisation,rw:nom-rw,communicationsEntrante-rw,communicationsSortantes-rw
-$CLMOD,httpToJavaServer,Information,rw:description-rw,exemple-rw,volumetrie-rw,communications-rw,metadonnees-rw,structure-rw
+$CLMOD,httpToJavaServer,Information,rw:description-rw,exemple-rw,categories-rw,volumetrie-rw,communications-rw
 $CLMOD,httpToJavaServer,Protocol,rw:details-rw,nom-rw
 $CLMOD,httpToJavaServer,User,rw:login-rw,password-rw,role-rw
-$CLMOD,httpToJavaServer,Structure,rw:
-$CLMOD,httpToJavaServer,CSV,rw:files-rw
-$CLMOD,httpToJavaServer,MetaDonnees,rw:clef-rw,description-rw
-$CLMOD,httpToJavaServer,File,rw:colonnes-rw
-$CLMOD,httpToJavaServer,Colonne,rw:nom-rw
-$CLMOD,httpToJavaServer,Json,rw:shema-rw,modele-rw
-$CLMOD,httpToJavaServer,Unstructured,rw:
-$CLMOD,httpToJavaServer,Xml,rw:shema-rw,modele-rw
-$CLMOD,httpToJavaServer,Modele,rw:types-rw
-$CLMOD,httpToJavaServer,Type,rw:caracteristiques-rw
-$CLMOD,httpToJavaServer,Attribut,rw:type-rw
-$CLMOD,httpToJavaServer,Caracteristique,rw:isCollection-rw,nom-rw
-$CLMOD,httpToJavaServer,Relation,rw:type-rw
-$CLMOD,httpToJavaServer,AutreStructure,rw:nom-rw,modele-rw
 $MOD,persistance : PersistenceManager,JavaGenerator,,,,,rw,0
 $CLMOD,persistance,Organisation,rw:nom-rw,communicationsEntrante-rw,communicationsSortantes-rw
 $CLMOD,persistance,Application,rw:
-$CLMOD,persistance,Entite,rw:
+$CLMOD,persistance,Division,rw:responsable-rw
 $CLMOD,persistance,Entreprise,rw:ville-rw,entites-rw,filiale-rw,maisonMere-rw
 $CLMOD,persistance,Communication,rw:delais-rw,description-rw,destination-rw,donnees-rw,protocole-rw,source-rw
-$CLMOD,persistance,Information,rw:description-rw,exemple-rw,volumetrie-rw,communications-rw,metadonnees-rw,structure-rw
+$CLMOD,persistance,Information,rw:description-rw,exemple-rw,categories-rw,volumetrie-rw,communications-rw
 $CLMOD,persistance,Protocol,rw:details-rw,nom-rw
 $CLMOD,persistance,User,rw:login-rw,password-rw,role-rw
-$CLMOD,persistance,Structure,rw:
-$CLMOD,persistance,CSV,rw:files-rw
-$CLMOD,persistance,MetaDonnees,rw:clef-rw,description-rw
-$CLMOD,persistance,File,rw:colonnes-rw
-$CLMOD,persistance,Colonne,rw:nom-rw
-$CLMOD,persistance,Json,rw:shema-rw,modele-rw
-$CLMOD,persistance,Unstructured,rw:
-$CLMOD,persistance,Xml,rw:shema-rw,modele-rw
-$CLMOD,persistance,Modele,rw:types-rw
-$CLMOD,persistance,Type,rw:caracteristiques-rw
-$CLMOD,persistance,Attribut,rw:type-rw
-$CLMOD,persistance,Caracteristique,rw:isCollection-rw,nom-rw
-$CLMOD,persistance,Relation,rw:type-rw
-$CLMOD,persistance,AutreStructure,rw:nom-rw,modele-rw
 //This processus gathers all modules running on the java side
 $PROC_JavaServer : S,JavaGenerator,serverLocal,persistance:
 //This processus gathers all modules running on the js client
 $PROC_JsClient : 0,PureJSGenerator,clientLocal,httpToJavaServer:
-$DIAG_Main diagram : $C,Application,15,31,0,0 $C,Entreprise,126,284,1,0 $C,Communication,562,125,2,0 $C,Organisation,170,138,3,0 $C,Entite,235,345,4,0 $C,Information,803,93,5,0 $C,Protocol,711,275,6,0 $C,User,332,44,7,0 $C,Structure,928,247,8,0 $C,CSV,846,323,9,0 $C,MetaDonnees,1027,134,10,0 $C,File,755,381,11,0 $C,Colonne,843,419,12,0 $C,Json,1019,323,13,0 $C,Unstructured,1367,323,14,0 $C,Xml,1149,323,15,0 $C,Modele,1084,408,16,0 $C,Type,1170,467,17,0 $C,Attribut,1276,639,18,0 $C,Caracteristique,1166,544,19,0 $C,Relation,1089,640,20,0 $C,AutreStructure,1239,323,21,0 $L,1,1,Entreprise.filiale $L,2,3,Communication.source $L,2,3,Communication.destination $L,1,4,Entreprise.entites $L,2,6,Communication.protocole $L,2,5,Communication.donnees $L,5,8,Information.structure $L,5,10,Information.metadonnees $L,9,11,CSV.files $L,11,12,File.colonnes $L,13,16,Json.modele $L,15,16,Xml.modele $L,16,17,Modele.types $L,20,17,Relation.type $L,17,19,Type.caracteristiques $L,21,16,AutreStructure.modele
+$DIAG_Main diagram : $C,Application,15,31,0,0 $C,Entreprise,126,284,1,0 $C,Communication,562,125,2,0 $C,Organisation,170,138,3,0 $C,Division,249,284,4,0 $C,Information,803,93,5,0 $C,Protocol,814,236,6,0 $C,User,332,44,7,0 $L,1,1,Entreprise.filiale $L,2,3,Communication.source $L,2,3,Communication.destination $L,1,4,Entreprise.entites $L,2,6,Communication.protocole $L,2,5,Communication.donnees
 $DIAG_architecture : $P,JavaServer,100,100 $P,JsClient,266,100
